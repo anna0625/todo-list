@@ -5,6 +5,7 @@ const todoList = document.querySelector('.todo-list');
 const filterOption = document.querySelector('.filter-todo');
 
 // ========== Event Listeners ========== //
+document.addEventListener('DOMContentLoaded', getTodos);
 todoButton.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
 filterOption.addEventListener('click', filterTodo);
@@ -24,8 +25,8 @@ function addTodo(event){
     newTodo.classList.add("todo-item");
     todoDiv.appendChild(newTodo);
 
-     // Clear Todo Input Value
-     todoInput.value = "";
+    // Add TODO to LocalStorage
+    saveLocalTodos(todoInput.value);
 
     // Check Mark Button
     const completeButton = document.createElement('button');
@@ -41,6 +42,9 @@ function addTodo(event){
 
     // Append todoDiv to todoList
     todoList.appendChild(todoDiv);
+
+    // Clear Todo Input Value
+    todoInput.value = "";
    
 }
 
@@ -52,9 +56,13 @@ function deleteCheck(e){
         const todo = item.parentElement;
         // Animation
         todo.classList.add('fall');
-        todo.addEventListener('transitionend', function(){
+        // Delete from localStorage
+        removeLocalTodos(todo);
+        // After completing transition style, todo will be removed
+        todo.addEventListener("transitionend", e => {
             todo.remove();
         });
+        
     }
 
     // CHECK MARK
@@ -96,5 +104,69 @@ function filterTodo(e){
 
 // Here is gonna recive a todo
 function saveLocalTodos(todo){
+    // Check --- Do I already have thing in there
+    let todos;
+    // todos is the key, and we try to get the values of it
+    if(localStorage.getItem('todos') === null){
+        todos = [];
+    }else{
+        todos = JSON.parse(localStorage.getItem('todos'));
+    }
+
+    todos.push(todo);
+    localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+function getTodos(){
+    // Check --- Do I already have thing in there
+    let todos;
+    if (localStorage.getItem("todos") === null){
+        todos = [];
+    } else{
+        todos = JSON.parse(localStorage.getItem("todos"));
+     }
+
+    // To show up the UI of todo-list again from localStorage
+    todos.forEach(function(todo){
+        // Create todo div
+        const todoDiv = document.createElement('div');
+        todoDiv.classList.add("todo");
+
+        // Create list
+        const newTodo = document.createElement('li');
+        newTodo.innerText = todo; //change todoInput.value -> todo
+        newTodo.classList.add("todo-item");
+        todoDiv.appendChild(newTodo);
+
+        // Check Mark Button
+        const completeButton = document.createElement('button');
+        completeButton.innerHTML = '<i class="fas fa-check"></i>';
+        completeButton.classList.add("complete-btn");
+        todoDiv.appendChild(completeButton);
+
+        // Check trash Button
+        const trashButton = document.createElement('button');
+        trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+        trashButton.classList.add("trash-btn");
+        todoDiv.appendChild(trashButton);
+
+        // Append todoDiv to todoList
+        todoList.appendChild(todoDiv);
     
+    });
+}
+
+function removeLocalTodos(todo){
+    // Check - Do we already have thing in there?
+    let todos;
+    // todos is the key, and we try to get the values of it
+    if(localStorage.getItem('todos') === null){
+        todos = [];
+    }else{
+        todos = JSON.parse(localStorage.getItem("todos"));
+    }
+    
+    const todoIndex = todo.children[0].innerText;
+    todos.splice(todos.indexOf(todoIndex), 1); 
+    localStorage.setItem("todos", JSON.stringify(todos));
 }
