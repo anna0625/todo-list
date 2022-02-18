@@ -5,7 +5,7 @@
 }
 
 body {
-    background: linear-gradient(120deg, #f6d365, #fda085);
+    background: linear-gradient(120deg, #65a4f6, #2c739c);
     color: white;
     font-family: 'Poppins', sans-serif;
     min-height: 100vh;
@@ -116,7 +116,8 @@ select {
 }
 
 select {
-    color: #ff6f47;
+    background: white;
+    color: #47c5ff;
     width: 10rem;
     cursor: pointer;
     padding: 1rem;
@@ -125,7 +126,7 @@ select {
 .select::after {
     content: "\25BC";
     position: absolute;
-    background: #ff6f47;
+    background: #47c5ff;
     top: 0;
     right: 0;
     padding: 1rem;
@@ -135,5 +136,5 @@ select {
 
 .select:hover::after {
     background: white;
-    color: #ff6f47
+    color: #47bbff
 }
